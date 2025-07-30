@@ -87,6 +87,16 @@ def sync_postgres_to_redis():
 
 app = FastAPI()
 
+# --- ENDPOINT MỚI ĐƯỢC THÊM VÀO ---
+@app.get("/")
+async def health_check():
+    """
+    Endpoint này chỉ dùng để kiểm tra xem server có hoạt động không.
+    Google Apps Script sẽ gọi đến đây để giữ cho server không bị "ngủ".
+    """
+    return {"status": "alive"}
+
+
 @app.post("/push_data")
 async def trigger_sync_endpoint():
     """
