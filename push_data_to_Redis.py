@@ -63,6 +63,11 @@ def sync_postgres_to_redis():
             data['industry'] = industry_map.get(data['industry'], data['industry'])
             
             # Xử lý hashtags
+            hashtags_map = {
+                "Positive": "Tích cực", "Negative": "Tiêu cực", "Neutral": "Trung tính"
+            }
+            data['hashtags'] = hashtags_map.get(data['hashtags'], data['hashtags'])
+
             hashtags_string = data.get('hashtags', '')
             data['hashtags'] = hashtags_string.split() if isinstance(hashtags_string, str) else []
 
@@ -74,7 +79,7 @@ def sync_postgres_to_redis():
             if score < 50: data['color'] = 'red.300'
             elif 50 <= score <= 75: data['color'] = 'yellow.300'
             else: data['color'] = 'green.300'
-            
+
             processed_data.append(data)
         
         logging.info("Xử lý dữ liệu hoàn tất.")
