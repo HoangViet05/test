@@ -64,12 +64,12 @@ def sync_postgres_to_redis():
             
             # Xử lý hashtags
             hashtags_map = {
-                "Positive": "Tích cực", "Negative": "Tiêu cực", "Neutral": "Trung tính"
+                "Positive": "Tích_cực", "Negative": "Tiêu_cực", "Neutral": "Trung_tính"
             }
             data['hashtags'] = hashtags_map.get(data['hashtags'], data['hashtags'])
 
             hashtags_string = data.get('hashtags', '')
-            data['hashtags'] = hashtags_string if isinstance(hashtags_string, str) else []
+            data['hashtags'] = hashtags_string.split() if isinstance(hashtags_string, str) else []
 
             # Tính toán màu sắc
             try:
