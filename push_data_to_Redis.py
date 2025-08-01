@@ -61,7 +61,8 @@ def sync_postgres_to_redis():
                 'title': row.get('title', ''),
                 'summary': row.get('summary', ''),
                 'influence_score': row.get('summary_token_count', 0),
-                'hashtags': row.get('sentiment', '')
+                'hashtags': row.get('sentiment', ''),
+                'link': row.get('link', '')
             }
 
             original_industry = data['industry'] # Lưu lại tên ngành gốc (tiếng Anh)
