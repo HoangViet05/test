@@ -31,8 +31,8 @@ def sync_postgres_to_redis():
         pg_conn = get_db_connection()
         cursor = pg_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
-            SELECT * FROM "fireant_data" WHERE "date" IN (
-                SELECT DISTINCT "date" FROM "fireant_data" WHERE "date" IS NOT NULL ORDER BY "date" DESC LIMIT 5
+            SELECT * FROM "General_News" WHERE "date" IN (
+                SELECT DISTINCT "date" FROM "General_News" WHERE "date" IS NOT NULL ORDER BY "date" DESC LIMIT 5
             ) ORDER BY "date" DESC;
         """
         cursor.execute(query)
@@ -59,9 +59,8 @@ def sync_postgres_to_redis():
                 'date': formatted_date,
                 'industry': row.get('industry', ''),
                 'title': row.get('title', ''),
-                'summary': row.get('summary', ''),
-                'influence_score': row.get('summary_token_count', 0),
-                'hashtags': row.get('sentiment', ''),
+                'summary': row.get('ai_summary', ''),
+                'influence': row.get('sentiment', ''),
                 'link': row.get('link', '')
             }
 
@@ -70,18 +69,9 @@ def sync_postgres_to_redis():
             industry_map = {"Finance": "Tài chính", "Technology": "Công nghệ", "Energy": "Năng lượng", "Healthcare": "Sức khỏe", "Other": "Khác"}
             data['industry'] = industry_map.get(data['industry'], data['industry'])
             
-            hashtags_map = {"Positive": "Tích_cực", "Negative": "Tiêu_cực", "Neutral": "Trung_tính"}
-            data['hashtags'] = hashtags_map.get(data['hashtags'], data['hashtags'])
-            data['hashtags'] = data['hashtags'].split() if isinstance(data['hashtags'], str) else []
-
-            try:
-                score = int(data['influence_score'])
-            except (ValueError, TypeError):
-                score = 0
-            if score < 50: data['color'] = 'red.300'
-            elif 50 <= score <= 75: data['color'] = 'yellow.300'
-            else: data['color'] = 'green.300'
-            # --- Kết thúc logic xử lý ---
+            influence_map = {"Positive": "Tích_cực", "Negative": "Tiêu_cực", "Neutral": "Trung_tính"}
+            data['influence'] = influence_map.get(data['influence'], data['influence'])
+            data['influence'] = data['influence'].split() if isinstance(data['influence'], str) else []
 
             # Thêm dữ liệu đã xử lý vào đúng danh sách ngành (dựa trên tên gốc)
             if original_industry in data_by_industry:
