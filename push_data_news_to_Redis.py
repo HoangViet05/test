@@ -60,8 +60,8 @@ def fetch_and_process_data_for_table(cursor, table_name: str):
         
         influence_map = {"Positive": "Tích_cực", "Negative": "Tiêu_cực", "Neutral": "Trung_tính"}
         # Đổi tên key từ 'influence' thành 'hashtags' để nhất quán với frontend nếu cần
-        data['hashtags'] = influence_map.get(data.pop('influence'), []) # Lấy và xóa key 'influence'
-        data['hashtags'] = data['hashtags'].split() if isinstance(data['hashtags'], str) else []
+        data['influence'] = influence_map.get(data.pop('influence'), []) # Lấy và xóa key 'influence'
+        data['influence'] = data['influence'].split() if isinstance(data['influence'], str) else []
 
 
         processed_rows.append(data)
