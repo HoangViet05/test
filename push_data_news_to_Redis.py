@@ -45,6 +45,13 @@ def fetch_and_process_data_for_table(cursor, table_name: str):
     for row in rows:
         formatted_date = row['date'].strftime('%d/%m/%Y') if row.get('date') else ""
         
+        # Logic ưu tiên source_link trước link
+        link_value = ''
+        if row.get('source_link') is not None and row.get('source_link').strip():
+            link_value = row.get('source_link', '')
+        else:
+            link_value = row.get('link', '')
+        
         # Áp dụng logic xử lý chung
         data = {
             'date': formatted_date,
@@ -52,7 +59,7 @@ def fetch_and_process_data_for_table(cursor, table_name: str):
             'title': row.get('title', ''),
             'summary': row.get('ai_summary', ''),
             'influence': row.get('sentiment', ''),
-            'link': row.get('link', '')
+            'link': link_value
         }
 
         industry_map = {"Finance": "Tài chính", "Technology": "Công nghệ", "Energy": "Năng lượng", "Healthcare": "Sức khỏe", "Other": "Khác"}
@@ -60,9 +67,8 @@ def fetch_and_process_data_for_table(cursor, table_name: str):
         
         influence_map = {"Positive": "Tích_cực", "Negative": "Tiêu_cực", "Neutral": "Trung_tính"}
         # Đổi tên key từ 'influence' thành 'hashtags' để nhất quán với frontend nếu cần
-        data['influence'] = influence_map.get(data.pop('influence'), []) # Lấy và xóa key 'influence'
+        data['influence'] = influence_map.get(data.pop('influence'), [])
         data['influence'] = data['influence'].split() if isinstance(data['influence'], str) else []
-
 
         processed_rows.append(data)
     
