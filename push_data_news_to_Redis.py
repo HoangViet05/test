@@ -34,7 +34,7 @@ def fetch_and_process_data_for_table(cursor, table_name: str):
     # Sử dụng psycopg2 để truyền tên bảng một cách an toàn
     query = f"""
         SELECT * FROM "{table_name}" WHERE "date" IN (
-            SELECT DISTINCT "date" FROM "{table_name}" WHERE "date" IS NOT NULL ORDER BY "date" DESC LIMIT 5
+            SELECT DISTINCT "date" FROM "{table_name}" WHERE "date" IS NOT NULL ORDER BY "date" DESC LIMIT 15
         ) ORDER BY "date" DESC;
     """
     cursor.execute(query)
