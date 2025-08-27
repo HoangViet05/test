@@ -26,7 +26,7 @@ def get_redis_connection():
 # --- HÀM PHỤ TRỢ MỚI ĐỂ TÁI SỬ DỤNG ---
 def fetch_and_process_data_for_table(cursor, table_name: str):
     """
-    Hàm này nhận vào tên bảng, truy vấn 5 ngày gần nhất,
+    Hàm này nhận vào tên bảng, truy vấn 15 ngày gần nhất,
     xử lý dữ liệu và trả về một danh sách các bản ghi đã được làm sạch.
     """
     logging.info(f"Bắt đầu lấy dữ liệu cho bảng: {table_name}...")
@@ -34,7 +34,7 @@ def fetch_and_process_data_for_table(cursor, table_name: str):
     # Sử dụng psycopg2 để truyền tên bảng một cách an toàn
     query = f"""
         SELECT * FROM "{table_name}" WHERE "date" IN (
-            SELECT DISTINCT "date" FROM "{table_name}" WHERE "date" IS NOT NULL ORDER BY "date" DESC LIMIT 15
+            SELECT DISTINCT "date" FROM "{table_name}" WHERE "date" IS NOT NULL ORDER BY "date" DESC LIMIT 5
         ) ORDER BY "date" DESC;
     """
     cursor.execute(query)
